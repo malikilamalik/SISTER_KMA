@@ -6,11 +6,18 @@ from examples import custom_style_3
 from pyfiglet import Figlet
 import os
 import xmlrpc.client as xmlrpclib
-
+import uuid
+# import paho mqtt
+import paho.mqtt.client as mqtt
 
 f = Figlet(font='lean')
 s = xmlrpclib.ServerProxy('http://26.53.0.146:32621')
 
+# buat callback on_publish untuk publish data
+########################################
+def on_publish(client, userdata, result):
+    print("Pemenang Berhasil Diumumkan \n")
+    pass
 
 def print_header():
     print(f.renderText('KOREAN MUSIC AWARDS'))
@@ -74,8 +81,16 @@ def lihat_kode_voting():
 def publish_pemenang():
     os.system('cls')
     print_header()
-    a = s.publish_pemenang()
-    print(a)
+    a = s.querry_result()
+
+    # definisikan nama broker yang akan digunakan
+    broker_address = "test.mosquitto.org"
+    client = mqtt.Client(str(uuid.uuid1()))
+
+    client.connect(broker_address, port=1883)
+    client.on_publish = on_publish
+    client.publish("KMA_WINNER", a)
+
     print('PEMENANG SUDAH DIUMUMKAN')
     prompt(confirmation, style=custom_style_3)
 

@@ -1,5 +1,3 @@
-# import paho mqtt
-import paho.mqtt.client as mqtt
 # import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCServer
 
@@ -16,16 +14,6 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
 server = SimpleXMLRPCServer(("26.53.0.146", 32621), requestHandler=RequestHandler)
 server.register_introspection_functions()
 
-# buat callback on_publish untuk publish data
-########################################
-def on_publish(client, userdata, result):
-    print("Pemenang Berhasil Diumumkan \n")
-    pass
-# definisikan nama broker yang akan digunakan
-broker_address = "broker.hivemq.com"
-client = mqtt.Client("KMA_SERVER")
-
-client.connect(broker_address, port=1883)
 
 candidate_list = {
     "SNSD" : 5,
@@ -52,12 +40,12 @@ def vote_candidate(code, x):
                         kode[code] = True
                         candidate_list[x] += 1
                         mutex.release()
-                        return x ,"Berhasil di vote"
+                        message = (x + "Berhasil di vote")
+                        return message
                     else:
-                        mutex.release()
-                        return"Kode Vote Sudah Digunakan"
+                        message = "Kode Vote Sudah Digunakan"
         else :
-            message = x, "Tidak Ada"
+            message = str(x)+ "Tidak Ada"
         
         
     # critical section ended, release the lock
@@ -68,35 +56,15 @@ def vote_candidate(code, x):
 # register function vote_candidate() as "vote"
 server.register_function(vote_candidate, name="vote")
 
-# create a function named publish_pemenang()
-def publish_pemenang():
-    mutex.acquire()
-    skor = 0
-    key = ''
-    for candidate in candidate_list:
-        if candidate_list[candidate] > skor:
-            skor = candidate_list[candidate]
-            key = candidate
-    total_vote = 0
-    for candidate in candidate_list:
-        total_vote += candidate_list[candidate]
-    message = "\nPEMENANG KMA ADALAH : %s\nDENGAN PEROLEHAN : %s\nLEADERBORD\n" % (str(key),str(skor))
-    for candidate in candidate_list:
-       message = message + '%s = %s Jumlah Vote : %s\n' % (str(candidate),str(candidate_list[candidate] / total_vote * 100),str(candidate_list[candidate]))
-    mutex.release()
-    client.publish("KMA_WINNER", message)
-    return message
 
-server.register_function(publish_pemenang, name="publish_pemenang")
 
 # create a function named vote_candidate()
 def check_code(code):
     mutex.acquire()
     for kode in kode_vote:
         if code in kode :
-            if(kode[code] == False):
-                mutex.release()
-                return True
+            mutex.release()
+            return True
     mutex.release()
     return False
     
