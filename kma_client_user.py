@@ -17,11 +17,11 @@ def print_header():
     print(f.renderText('KOREAN MUSIC AWARDS'))
     print('==================================\n')
 
-menus1 = [
+menuUtama = [
     {
         'type': 'list',
-        'name': 'menus1',
-        'message': 'Welcome To Korean Music Awards',
+        'name': 'menuUtama',
+        'message': 'Welcome To Korean Music Awards Voting',
         'choices': ['Voting', 'Hasil Voting','Keluar'],
         'filter': lambda val: val.lower()
     }
@@ -51,9 +51,9 @@ def on_message(client, userdata, message):
 def menu1():
     os.system('cls')
     print_header()
-    answer = prompt(menus1, style=custom_style_3)
+    answer = prompt(menuUtama, style=custom_style_3)
 
-    return answer['menus1']
+    return answer['menuUtama']
 
 def voting(code):
     os.system('cls')
