@@ -21,7 +21,7 @@ menus1 = [
     {
         'type': 'list',
         'name': 'menus1',
-        'message': 'Welcome To Korean Music Awards',
+        'message': 'Welcome To Korean Music Awards Voting',
         'choices': ['Voting', 'Hasil Voting','Keluar'],
         'filter': lambda val: val.lower()
     }

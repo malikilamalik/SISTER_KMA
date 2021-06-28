@@ -27,7 +27,7 @@ menus1 = [
     {
         'type': 'list',
         'name': 'menus1',
-        'message': 'Welcome To Korean Music Awards',
+        'message': 'Welcome To Korean Music Awards Voting',
         'choices': ['Generate Kode Voting', 'Melihat Kode Vote' ,'Lihat Hasil Voting' ,'Umumkan Pemenang','Keluar'],
         'filter': lambda val: val.lower()
     }
